@@ -1,0 +1,1 @@
+INSERT INTO test_schema.owners (id, name) VALUES (1, 'John');INSERT INTO test_schema.owners (id, name) VALUES (2, 'Jane');INSERT INTO test_schema.pets (id, name, owner_id) VALUES (1, 'Max', 1);INSERT INTO test_schema.pets (id, name, owner_id) VALUES (2, 'Bella', 2);
