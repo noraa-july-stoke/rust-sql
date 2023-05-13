@@ -20,7 +20,6 @@ macro_rules! generate_table {
     };
 }
 
-
 #[macro_export]
 macro_rules! generate_column {
     ($column_name:expr, $data_type:expr, $($constraint:expr),*) => {
@@ -32,9 +31,33 @@ macro_rules! generate_column {
     };
 }
 
-
 #[macro_export]
 macro_rules! generate_query {
+    ($schema_name:expr, $table_name1:expr, $join_table:expr, $table_name2:expr, $join_condition1:expr, $join_condition2:expr) => {
+        format!(
+            "SELECT * FROM {}.{} JOIN {}.{} ON {} JOIN {}.{} ON {};",
+            $schema_name,
+            $table_name1,
+            $schema_name,
+            $join_table,
+            $join_condition1,
+            $schema_name,
+            $table_name2,
+            $join_condition2
+        )
+    };
+    ($schema_name:expr, $table_name1:expr, $table_name2:expr, $join_condition:expr) => {
+        format!(
+            "SELECT * FROM {}.{} JOIN {}.{} ON {};",
+            $schema_name, $table_name1, $schema_name, $table_name2, $join_condition
+        )
+    };
+    ($schema_name:expr, $table_name:expr, $where_clause:expr) => {
+        format!(
+            "SELECT * FROM {}.{} WHERE {};",
+            $schema_name, $table_name, $where_clause
+        )
+    };
     ($schema_name:expr, $table_name:expr) => {
         format!("SELECT * FROM {}.{};", $schema_name, $table_name)
     };
