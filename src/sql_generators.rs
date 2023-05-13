@@ -15,33 +15,34 @@ macro_rules! generate_table {
         {
             let mut sql = format!("CREATE TABLE IF NOT EXISTS {} (\n", $table_name);
             $(sql += &$column;)*
-            sql.trim_end_matches(",\n").to_owned() + "\n);"
+            sql.trim_end_matches(",\n").to_owned() + "\n);\n"
         }
     };
 }
+
 
 #[macro_export]
 macro_rules! generate_column {
     ($column_name:expr, $data_type:expr, $($constraint:expr),*) => {
         {
-            let mut sql = format!("\t{} {}", $column_name, $data_type);
-            $(sql += &$constraint;)*
-            sql += ",\n";
-            sql
+            let mut sql = format!("\t{} {} ", $column_name, $data_type);
+            $(sql += &format!("{} ", $constraint);)*
+            sql.trim_end_matches(",\n").trim_end_matches(", ").to_owned() + ",\n"
         }
     };
 }
 
+
 #[macro_export]
 macro_rules! generate_query {
-    ($table_name:expr) => {
-        format!("SELECT * FROM {};", $table_name)
+    ($schema_name:expr, $table_name:expr) => {
+        format!("SELECT * FROM {}.{};", $schema_name, $table_name)
     };
 }
 
 #[macro_export]
 macro_rules! generate_insert {
-    ($table_name:expr, $($value:expr),*) => {
-        format!("INSERT INTO {} VALUES ({});", $table_name, $($value),*)
+    ($schema_name:expr, $table_name:expr, $($value:expr),*) => {
+        format!("INSERT INTO {}.{} VALUES ({});", $schema_name, $table_name, $($value),*)
     };
 }
